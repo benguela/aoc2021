@@ -12,22 +12,10 @@ function epsilon(arr)
   return .!gamma(arr)
 end
 
-
-# data = [0 0 1 0 0;
-#         1 1 1 1 0;
-#         1 0 1 1 0;
-#         1 0 1 1 1;
-#         1 0 1 0 1;
-#         0 1 1 1 1;
-#         0 0 1 1 1;
-#         1 1 1 0 0;
-#         1 0 0 0 0;
-#         1 1 0 0 1;
-#         0 0 0 1 0;
-#         0 1 0 1 0]
-
 g = gamma(data)
 e = epsilon(data)
+
+# answer to part 1
 bitarr_to_int(g') * bitarr_to_int(e')
 
 function rating(data,rate_func,index=1)
@@ -42,4 +30,5 @@ end
 o2 = rating(data, gamma)
 co2 = rating(data, epsilon)
 
+#answer to part 2
 o2*co2
