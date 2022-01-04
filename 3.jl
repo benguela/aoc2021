@@ -1,5 +1,45 @@
 data = parse.(Int,permutedims(reduce(hcat, collect.(readlines(joinpath(@__DIR__, "./3.txt"))))))
 
-gamma = BitArray(map((s) -> s > size(data)[1]/2,  sum(data,dims=1)))
-epsilon = .!gamma
-Int(gamma.chunks[1]) * Int(epsilon.chunks[1])
+function bitarr_to_int(arr)
+  return sum(arr .* (2 .^ collect(length(arr)-1:-1:0)))
+end
+
+function gamma(arr)
+  return BitArray(map((s) -> s >= size(arr)[1]/2,  sum(arr,dims=1)))
+end
+
+function epsilon(arr)
+  return .!gamma(arr)
+end
+
+
+# data = [0 0 1 0 0;
+#         1 1 1 1 0;
+#         1 0 1 1 0;
+#         1 0 1 1 1;
+#         1 0 1 0 1;
+#         0 1 1 1 1;
+#         0 0 1 1 1;
+#         1 1 1 0 0;
+#         1 0 0 0 0;
+#         1 1 0 0 1;
+#         0 0 0 1 0;
+#         0 1 0 1 0]
+
+g = gamma(data)
+e = epsilon(data)
+bitarr_to_int(g') * bitarr_to_int(e')
+
+function rating(data,rate_func,index=1)
+  if size(data,1) == 1
+    return bitarr_to_int(BitArray(data)')
+  end
+  rate = rate_func(data)
+  filtered_data  = data[data[:,index].==rate[index],:]
+  return rating(filtered_data, rate_func, index += 1)
+end
+
+o2 = rating(data, gamma)
+co2 = rating(data, epsilon)
+
+o2*co2
